@@ -1,11 +1,10 @@
+'use client'
 import dynamic from 'next/dynamic';
 
 const Mermaid = dynamic(() => import('@/components/mermaid'), { ssr: false });
 
-import Editor from '@/components/mermaideditor';
-
-export default function Home() {
-  const mermaidChart = `
+export default function Editor() {
+  var mermaidChart = `
     mindmap
       root((mindmap))
         Origins
@@ -24,20 +23,13 @@ export default function Home() {
           Pen and paper
           Mermaid
   `;
-  const mindMapChart = `
-    mindmap
-      root((Mindmap))
-        child 1
-          grandchild 1
-          grandchild 2
-        child 2
-          grandchild 3
-          grandchild 4
-  `;
+  const change = (e) => {
+    mermaidChart = e
+  }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>Hi</div>
-      <Editor></Editor>
+    <main className="flex min-h-screen flex-col items-center justify-between">
+      <textarea value={mermaidChart} onChange={(e) => change(e.target.value)}></textarea>
+      <Mermaid chart={mermaidChart} />
     </main>
   );
-}//<Mermaid chart={mermaidChart} />
+}
