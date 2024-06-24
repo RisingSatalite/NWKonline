@@ -35,3 +35,7 @@ body {
 input, textarea{
   color: black;
 }
+
+span.half {
+  max-width: 50%
+}
