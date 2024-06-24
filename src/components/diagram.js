@@ -1,13 +1,24 @@
-import Mermaid from "mermaid";
+'use client'
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+
+const Mermaid = dynamic(() => import('mermaid').then((mod) => mod.default), { ssr: false });
 
 export default function CustomDiagram() {
-    const diagramCode = "graph TD A[Start] --> B[End]";
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
+  const [isMounted, setIsMounted] = useState(false);
+  const diagramCode = "graph TD A[Start] --> B[End]";
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      {isMounted && (
         <div>
-            <Mermaid>diagramCode</Mermaid>
+          <Mermaid>{diagramCode}</Mermaid>
         </div>
-      </main>
-    );
-  }
-  
+      )}
+    </main>
+  );
+}
