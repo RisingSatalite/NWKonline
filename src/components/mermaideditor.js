@@ -31,6 +31,7 @@ export default function Editor() {
 
   return (
     <main>
+    <div class="full">
       <span class="half">
         <textarea
             value={mermaidChart}
@@ -40,8 +41,9 @@ export default function Editor() {
         ></textarea>
       </span>
       <span class="half">
-        <Mermaid chart={mermaidChart} />
+        <Mermaid chart={mermaidChart} key={mermaidChart} />
       </span>
+      </div>
     </main>
   );
 }

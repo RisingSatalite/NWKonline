@@ -36,6 +36,11 @@ input, textarea{
   color: black;
 }
 
-span.half {
-  max-width: 50%
+.full {
+  width: 98%;
+}
+
+.half {
+  width: 49%;
+  max-width: 49%
 }

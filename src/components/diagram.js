@@ -13,7 +13,7 @@ export default function CustomDiagram() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between">
       {isMounted && (
         <div>
           <Mermaid>{diagramCode}</Mermaid>
