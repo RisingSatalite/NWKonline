@@ -35,7 +35,7 @@ export default function Home() {
           grandchild 4
   `;
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className=" items-center p-24">
       <div>Hi</div>
       <Editor></Editor>
     </main>
