@@ -8,7 +8,7 @@ export default function Editor() {
   const [mermaidChart, setMermaidChart] = useState(`
 mindmap
   root((mindmap name))
-    Origins
+    Example Origins
       Long history
       ::icon(fa fa-book)
       Popularisation
@@ -22,7 +22,6 @@ mindmap
         Argument mapping
     Tools
       Pen and paper
-      Mermaid
   `);
 
   const change = (e) => {
