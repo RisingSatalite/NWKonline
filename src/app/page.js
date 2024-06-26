@@ -36,7 +36,7 @@ export default function Home() {
   `;
   return (
     <main className=" items-center p-24">
-      <div>Hi</div>
+      <div>Mindmap maker</div>
       <Editor></Editor>
     </main>
   );

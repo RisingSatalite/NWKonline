@@ -26,24 +26,43 @@ export default function Editor() {
   `);
 
   const change = (e) => {
+    console.log("Textarea value changed:", e.target.value);
     setMermaidChart(e.target.value);
+  };
+
+  //Example
+  const handleTextAreaChange = (e) => {
+    const newValue = e.target.value;
+    const oldValue = mermaidChart;
+    const newLineCount = (newValue.match(/\n/g) || []).length;
+    const oldLineCount = (oldValue.match(/\n/g) || []).length;
+  
+    if (newLineCount > oldLineCount) {
+      const diff = newValue.slice(oldValue.length);
+      const newlineIndex = diff.indexOf("\n");
+      const newPosition = oldValue.length + newlineIndex;
+  
+      console.log(`New line added at position ${newPosition}!`);
+    }
+  
+    setMermaidChart(newValue);
   };
 
   return (
     <main>
-    <div class="full">
-      <span class="half">
-        <textarea
-            value={mermaidChart}
-            onChange={change}
-            rows={10}
-            className="w-full p-2 border border-gray-300 rounded"
-        ></textarea>
-      </span>
-      <span class="half">
-        <Mermaid chart={mermaidChart} key={mermaidChart} />
-      </span>
-      </div>
+        <div class="full flex justify-center">
+            <span class="half flex-1">
+                <textarea
+                value={mermaidChart}
+                onChange={change}
+                rows={10}
+                className="w-full p-2 border border-gray-300 rounded"
+                ></textarea>
+            </span>
+            <span class="half flex-1">
+                <Mermaid chart={mermaidChart} key={mermaidChart} />
+            </span>
+        </div>
     </main>
   );
 }
