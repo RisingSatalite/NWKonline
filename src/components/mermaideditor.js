@@ -29,6 +29,27 @@ mindmap
     setMermaidChart(e.target.value);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent the default newline behavior
+
+      const { selectionStart, selectionEnd, value } = event.target;
+      const currentLineStart = value.lastIndexOf('\n', selectionStart - 1) + 1;
+      const currentLine = value.substring(currentLineStart, selectionStart);
+      const leadingSpaces = currentLine.match(/^\s*/)[0];
+
+      const newValue = 
+        value.substring(0, selectionStart) + '\n' + leadingSpaces + value.substring(selectionEnd);
+
+      setMermaidChart(newValue);
+
+      // Move the cursor to the new position
+      setTimeout(() => {
+        event.target.selectionStart = event.target.selectionEnd = selectionStart + leadingSpaces.length + 1;
+      }, 0);
+    }
+  };
+
   return (
     <main>
         <div class="full flex justify-center">
@@ -36,6 +57,7 @@ mindmap
                 <textarea
                 value={mermaidChart}
                 onChange={change}
+                onKeyDown={handleKeyDown}
                 rows={10}
                 className="w-full p-2 border border-gray-300 rounded"
                 ></textarea>
