@@ -5,8 +5,7 @@ import { useState } from 'react';
 const Mermaid = dynamic(() => import('@/components/mermaid'), { ssr: false });
 
 export default function Editor() {
-  const [mermaidChart, setMermaidChart] = useState(`
-mindmap
+  const [mermaidChart, setMermaidChart] = useState(`mindmap
   root((mindmap name))
     Example Origins
       Long history

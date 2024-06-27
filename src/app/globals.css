@@ -49,3 +49,9 @@ input, textarea{
 textarea{
   height: 100%;
 }
+
+button{
+  background-color: aqua;
+  color: black;
+  padding: 10px;
+}
