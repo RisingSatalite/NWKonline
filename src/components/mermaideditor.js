@@ -18,7 +18,7 @@ export default function Editor() {
   const [items, setItems] = useState([]);
   const [inputValue, setInputValue] = useState('');
 
-  const arrowTypes = ["->>","-->>","--x","-x","->","-->"]
+  const arrowTypes = ["->>", "-->>", "--x", "-x", "->", "-->"];
   const [arrowList, setArrowList] = useState([]);
   
   const [selectedItem, setSelectedItem] = useState(null);
@@ -88,11 +88,10 @@ export default function Editor() {
       const content = e.target.result;
       try {
         const importedData = content;
-        // Update your mind map data with importedData
         setMermaidChart(importedData);
       } catch (error) {
         console.error('Error parsing imported data:', error);
-        alert('An error occur while reading the data');
+        alert('An error occurred while reading the data');
       }
     };
   
@@ -101,71 +100,71 @@ export default function Editor() {
   
   return (
     <main>
-        <div>
-          <button onClick={handleExport}>Export Data</button>
+      <div>
+        <button onClick={handleExport}>Export Data</button>
+        <input
+          type="file"
+          accept=".txt"
+          onChange={handleFileUpload}
+          style={{ display: 'none' }}
+          id="fileInput"
+        />
+        <button onClick={() => document.getElementById('fileInput').click()}>Import Data</button>
+      </div>
+      <div className="full flex justify-center">
+        <span className="half flex-1">
+          <textarea
+            value={mermaidChart}
+            onChange={change}
+            onKeyDown={handleKeyDown}
+            rows={10}
+            className="w-full p-2 border border-gray-300 rounded"
+          ></textarea>
+        </span>
+        <span>
           <input
-            type="file"
-            accept=".txt"
-            onChange={handleFileUpload}
-            style={{ display: 'none' }}
-            id="fileInput"
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addItem()}
           />
-          <button onClick={() => document.getElementById('fileInput').click()}>Import Data</button>
-        </div>
-        <div class="full flex justify-center">
-            <span class="half flex-1">
-                <textarea
-                value={mermaidChart}
-                onChange={change}
-                onKeyDown={handleKeyDown}
-                rows={10}
-                className="w-full p-2 border border-gray-300 rounded"
-                ></textarea>
-            </span>
-            <span>
+          <button onClick={addItem}>Add Item</button>
+
+          <ul>
+            {items.map((item, index) => (
+              <li key={index}>
+                {item}
+                <button onClick={() => removeItem(index)}>Remove</button>
+                <button onClick={() => setSelectedItem(item)}>Select</button>
+              </li>
+            ))}
+          </ul>
+          {selectedItem && (
+            <div>
+              <h3>Add Text for: {selectedItem}</h3>
               <input
                 type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && addItem()}
+                value={arrowText}
+                onChange={(e) => setArrowText(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && addArrow()}
               />
-              <button onClick={addItem}>Add Item</button>
+              <button onClick={addArrow}>Add Text</button>
+            </div>
+          )}
 
-              <ul>
-                {items.map((item, index) => (
-                  <li key={index}>
-                    {item}
-                    <button onClick={() => removeItem(index)}>Remove</button>
-                    <button onClick={() => setSelectedItem(item)}>Select</button>
-                  </li>
-                ))}
-              </ul>
-              {selectedItem && (
-                <div>
-                  <h3>Add Text for: {selectedItem}</h3>
-                  <input
-                    type="text"
-                    value={arrowText}
-                    onChange={(e) => setArrowText(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && addArrow()}
-                  />
-                  <button onClick={addArrow}>Add Text</button>
-                </div>
-              )}
-
-              <h2>Second List</h2>
-              <ul>
-                {arrowList.map((item, index) => (
-                  <li key={index}>
-                    {item.item}: {item.text}
-                  </li>
-                ))}
-              </ul>
-            </span>
-            <span class="half flex-1">
-                <Mermaid chart={mermaidChart} key={mermaidChart} />
-            </span>
-        </div>
+          <h2>Second List</h2>
+          <ul>
+            {arrowList.map((item, index) => (
+              <li key={index}>
+                {item.item}: {item.text}
+              </li>
+            ))}
+          </ul>
+        </span>
+        <span className="half flex-1">
+          <Mermaid chart={mermaidChart} key={mermaidChart} />
+        </span>
+      </div>
     </main>
   );
 }
