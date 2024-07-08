@@ -18,6 +18,12 @@ export default function Editor() {
   const [items, setItems] = useState([]);
   const [inputValue, setInputValue] = useState('');
 
+  const arrowTypes = ["->>","-->>","--x","-x","->","-->"]
+  const [arrowList, setArrowList] = useState([]);
+  
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [arrowText, setArrowText] = useState('');
+
   const change = (e) => {
     setMermaidChart(e.target.value);
   };
@@ -31,6 +37,13 @@ export default function Editor() {
 
   const removeItem = (index) => {
     setItems(items.filter((_, i) => i !== index));
+  };
+
+  const addArrow = () => {
+    if (selectedItem && arrowText.trim()) {
+      setArrowList([...arrowList, { item: selectedItem, text: arrowText.trim() }]);
+      setArrowText('');
+    }
   };
 
   const handleKeyDown = (event) => {
@@ -117,11 +130,34 @@ export default function Editor() {
                 onKeyDown={(e) => e.key === 'Enter' && addItem()}
               />
               <button onClick={addItem}>Add Item</button>
+
               <ul>
                 {items.map((item, index) => (
                   <li key={index}>
                     {item}
                     <button onClick={() => removeItem(index)}>Remove</button>
+                    <button onClick={() => setSelectedItem(item)}>Select</button>
+                  </li>
+                ))}
+              </ul>
+              {selectedItem && (
+                <div>
+                  <h3>Add Text for: {selectedItem}</h3>
+                  <input
+                    type="text"
+                    value={arrowText}
+                    onChange={(e) => setArrowText(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && addArrow()}
+                  />
+                  <button onClick={addArrow}>Add Text</button>
+                </div>
+              )}
+
+              <h2>Second List</h2>
+              <ul>
+                {arrowList.map((item, index) => (
+                  <li key={index}>
+                    {item.item}: {item.text}
                   </li>
                 ))}
               </ul>
