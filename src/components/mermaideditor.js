@@ -5,26 +5,32 @@ import { useState } from 'react';
 const Mermaid = dynamic(() => import('@/components/mermaid'), { ssr: false });
 
 export default function Editor() {
-  const [mermaidChart, setMermaidChart] = useState(`mindmap
-  root((mindmap name))
-    Example Origins
-      Long history
-      ::icon(fa fa-book)
-      Popularisation
-        British popular psychology author Tony Buzan
-    Research
-      On effectivness<br/>and features
-      On Automatic creation
-      Uses
-        Creative techniques
-        Strategic planning
-        Argument mapping
-    Tools
-      Pen and paper
+  const [mermaidChart, setMermaidChart] = useState(`sequenceDiagram
+    Alice ->> Bob: Hello Bob, how are you?
+    Bob-->>John: How about you John?
+    Bob--x Alice: I am good thanks!
+    Bob-x John: I am good thanks!
+    Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
+
+    Bob-->Alice: Checking with John...
+    Alice->John: Yes... John, how are you?
   `);
+  const [items, setItems] = useState([]);
+  const [inputValue, setInputValue] = useState('');
 
   const change = (e) => {
     setMermaidChart(e.target.value);
+  };
+
+  const addItem = () => {
+    if (inputValue.trim()) {
+      setItems([...items, inputValue.trim()]);
+      setInputValue('');
+    }
+  };
+
+  const removeItem = (index) => {
+    setItems(items.filter((_, i) => i !== index));
   };
 
   const handleKeyDown = (event) => {
@@ -58,7 +64,7 @@ export default function Editor() {
   };
   
   const handleExport = () => {
-    downloadFile('mindmap.txt', mermaidChart);
+    downloadFile('sequencediagram.txt', mermaidChart);
   };
 
   const handleFileUpload = (event) => {
@@ -102,6 +108,23 @@ export default function Editor() {
                 rows={10}
                 className="w-full p-2 border border-gray-300 rounded"
                 ></textarea>
+            </span>
+            <span>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && addItem()}
+              />
+              <button onClick={addItem}>Add Item</button>
+              <ul>
+                {items.map((item, index) => (
+                  <li key={index}>
+                    {item}
+                    <button onClick={() => removeItem(index)}>Remove</button>
+                  </li>
+                ))}
+              </ul>
             </span>
             <span class="half flex-1">
                 <Mermaid chart={mermaidChart} key={mermaidChart} />
