@@ -144,7 +144,7 @@ export default function Editor() {
           <button onClick={addItem}>Add Item</button>
 
           <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="droppable?">
+            <Droppable droppableId={items.map((item, index) => item + index)}>
               {(provided) => (
                 <ul
                   {...provided.droppableProps}
@@ -152,7 +152,7 @@ export default function Editor() {
                   style={{ listStyle: 'none', padding: 0 }}
                 >
                   {items.map((item, index) => (
-                    <Draggable key={index} draggableId={item + index} index={index}>
+                    <Draggable key={item + index} draggableId={item + index} index={index}>
                       {(provided) => (
                         <li
                           ref={provided.innerRef}
