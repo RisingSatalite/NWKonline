@@ -1,6 +1,7 @@
 'use client';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const Mermaid = dynamic(() => import('@/components/mermaid'), { ssr: false });
 
@@ -39,6 +40,16 @@ export default function Editor() {
 
   const removeItem = (index) => {
     setItems(items.filter((_, i) => i !== index));
+  };
+
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const reorderedItems = Array.from(items);
+    const [removed] = reorderedItems.splice(result.source.index, 1);
+    reorderedItems.splice(result.destination.index, 0, removed);
+
+    setItems(reorderedItems);
   };
 
   const addArrow = () => {
@@ -132,16 +143,44 @@ export default function Editor() {
           />
           <button onClick={addItem}>Add Item</button>
 
-          <ul>
-            {items.map((item, index) => (
-              <li key={index}>
-                {item}
-                <button onClick={() => removeItem(index)}>Remove</button>
-                <button onClick={() => setSelectedItem(item)}>Select</button>
-                <button onClick={() => setToItem(item)}>Select</button>
-              </li>
-            ))}
-          </ul>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="droppable">
+              {(provided) => (
+                <ul
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={{ listStyle: 'none', padding: 0 }}
+                >
+                  {items.map((item, index) => (
+                    <Draggable key={index} draggableId={item + index} index={index}>
+                      {(provided) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={{
+                            ...provided.draggableProps.style,
+                            padding: '8px',
+                            margin: '0 0 8px 0',
+                            backgroundColor: '#fff',
+                            border: '1px solid #ddd',
+                            borderRadius: '4px',
+                          }}
+                        >
+                          {item}
+                          <button onClick={() => removeItem(index)}>Remove</button>
+                          <button onClick={() => setSelectedItem(item)}>Select</button>
+                          <button onClick={() => setToItem(item)}>Select</button>
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
+
           {selectedItem && (
             <div>
               <h3>Add Text for: {selectedItem}</h3>
