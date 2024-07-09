@@ -144,7 +144,7 @@ export default function Editor() {
           <button onClick={addItem}>Add Item</button>
 
           <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="droppable">
+            <Droppable droppableId="droppable?">
               {(provided) => (
                 <ul
                   {...provided.droppableProps}
@@ -162,7 +162,7 @@ export default function Editor() {
                             ...provided.draggableProps.style,
                             padding: '8px',
                             margin: '0 0 8px 0',
-                            backgroundColor: '#fff',
+                            backgroundColor: '#000',
                             border: '1px solid #ddd',
                             borderRadius: '4px',
                           }}
