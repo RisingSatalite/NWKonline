@@ -22,6 +22,8 @@ export default function Editor() {
   const [arrowList, setArrowList] = useState([]);
   
   const [selectedItem, setSelectedItem] = useState(null);
+  const [toItem, setToItem] = useState(null);
+  const [selectedArrow, setSelectedArrow] = useState([]);
   const [arrowText, setArrowText] = useState('');
 
   const change = (e) => {
@@ -40,8 +42,8 @@ export default function Editor() {
   };
 
   const addArrow = () => {
-    if (selectedItem && arrowText.trim()) {
-      setArrowList([...arrowList, { item: selectedItem, text: arrowText.trim() }]);
+    if (selectedItem && toItem && arrowText.trim()) {
+      setArrowList([...arrowList, { item: selectedItem, item2: toItem, text: arrowText.trim() }]);
       setArrowText('');
     }
   };
@@ -136,6 +138,7 @@ export default function Editor() {
                 {item}
                 <button onClick={() => removeItem(index)}>Remove</button>
                 <button onClick={() => setSelectedItem(item)}>Select</button>
+                <button onClick={() => setToItem(item)}>Select</button>
               </li>
             ))}
           </ul>
@@ -156,7 +159,7 @@ export default function Editor() {
           <ul>
             {arrowList.map((item, index) => (
               <li key={index}>
-                {item.item}: {item.text}
+                {item.item}:{item.item2}:{item.text}
               </li>
             ))}
           </ul>
