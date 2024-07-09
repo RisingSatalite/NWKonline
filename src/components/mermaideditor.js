@@ -181,9 +181,8 @@ export default function Editor() {
             </Droppable>
           </DragDropContext>
 
-          {selectedItem && (
-            <div>
-              <h3>Add Text for: {selectedItem}</h3>
+          <div>
+              <h3>Add Text for: {selectedItem} to {toItem}</h3>
               <input
                 type="text"
                 value={arrowText}
@@ -191,8 +190,7 @@ export default function Editor() {
                 onKeyDown={(e) => e.key === 'Enter' && addArrow()}
               />
               <button onClick={addArrow}>Add Text</button>
-            </div>
-          )}
+          </div>
 
           <h2>Second List</h2>
           <ul>
@@ -201,6 +199,41 @@ export default function Editor() {
                 {item.item}:{item.item2}:{item.text}
               </li>
             ))}
+            <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId={arrowList.map((item, index) => item + index)}>
+              {(provided) => (
+                <ul
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={{ listStyle: 'none', padding: 0 }}
+                >
+                  {arrowList.map((item, index) => (
+                    <Draggable key={item + index} draggableId={item + index} index={index}>
+                      {(provided) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={{
+                            ...provided.draggableProps.style,
+                            padding: '8px',
+                            margin: '0 0 8px 0',
+                            backgroundColor: '#000',
+                            border: '1px solid #ddd',
+                            borderRadius: '4px',
+                          }}
+                        >
+                          {item.item}:{item.item2}:{item.text}
+                          <button onClick={() => removeItem(index)}>Remove</button>
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
           </ul>
         </span>
         <span className="half flex-1">
