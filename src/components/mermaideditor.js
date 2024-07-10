@@ -143,6 +143,12 @@ export default function Editor() {
           />
           <button onClick={addItem}>Add Item</button>
 
+          {items.map((item, index) => (
+              <li key={index}>
+                {item}
+                <button onClick={() => removeItem(index)}>Remove</button>
+              </li>
+            ))}
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId={items.map((item, index) => item + index)}>
               {(provided) => (
