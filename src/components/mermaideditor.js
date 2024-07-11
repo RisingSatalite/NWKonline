@@ -123,8 +123,7 @@ export default function Editor() {
   const handleExport = () => {
     let text = ''
     for (let arrows of arrowList) {
-      text += arrows[0] + "," + arrows[3] + "," + arrows[1] + "," + arrows[2] + `
-      `;
+      text += arrows[0] + "," + arrows[3] + "," + arrows[1] + "," + arrows[2] + '\n';
     }
     downloadFile('sequencediagram.txt', text);
   };
@@ -132,37 +131,41 @@ export default function Editor() {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
-    
+  
     reader.onload = (e) => {
       const content = e.target.result;
       try {
-        let columns = []
+        let columns = [];
         const importedData = content;
-        //Read data
+        console.log("All");
+        console.log(importedData);
+  
+        // Read data
         let lines = importedData.split('\n');
-        for(line in lines){
-          let sections = line.split(",")
-          if(sections.length == 4){
-            //set arrows
-            setArrowList([...arrowList, [ sections[0], sections[2], sections[3], sections[1]]]);
-            columns.push(sections[0])
-            columns.push(sections[2])
+        for (const line of lines) { // Corrected the loop
+          console.log(line);
+          let sections = line.split(",");
+          if (sections.length == 4) {
+            console.log(sections);
+            // Set arrows
+            setArrowList((prevArrowList) => [...prevArrowList, [sections[0], sections[2], sections[3], sections[1]]]);
+            columns.push(sections[0]);
+            columns.push(sections[2]);
           }
         }
-        //Set columns
-        //Use set to remove duplicates
-        setItems(...new Set(columns))
-        
+        // Set columns
+        // Use set to remove duplicates
+        setItems(Array.from(new Set(columns))); // Corrected to pass an array to setItems
+  
         setMermaidChart(importedData);
       } catch (error) {
         console.error('Error parsing imported data:', error);
-        alert('An error occurred while reading the data');
-        alert('An error occurred while reading the data:', error);
+        alert('An error occurred while reading the data: ' + error);
       }
     };
   
     reader.readAsText(file);
-  };  
+  };
   
   return (
     <main>
