@@ -3,6 +3,8 @@ import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
+//const fs = require('fs');
+
 const Mermaid = dynamic(() => import('@/components/mermaid'), { ssr: false });
 
 export default function Editor() {
@@ -134,7 +136,23 @@ export default function Editor() {
     reader.onload = (e) => {
       const content = e.target.result;
       try {
+        let columns = []
         const importedData = content;
+        //Read data
+        let lines = importedData.split('\n');
+        for(line in lines){
+          let sections = line.split(",")
+          if(sections.length == 4){
+            //set arrows
+            setArrowList([...arrowList, [ sections[0], sections[2], sections[3], sections[1]]]);
+            columns.push(sections[0])
+            columns.push(sections[2])
+          }
+        }
+        //Set columns
+        //Use set to remove duplicates
+        setItems(...new Set(columns))
+        
         setMermaidChart(importedData);
       } catch (error) {
         console.error('Error parsing imported data:', error);

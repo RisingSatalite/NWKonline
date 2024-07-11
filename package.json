@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "fs": "^0.0.1-security",
     "mermaid": "^10.9.1",
     "next": "14.2.4",
     "react": "^18",
