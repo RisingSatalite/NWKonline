@@ -148,7 +148,7 @@ export default function Editor() {
           if (sections.length == 4) {
             console.log(sections);
             // Set arrows
-            setArrowList((prevArrowList) => [...prevArrowList, [sections[0], sections[2], sections[3], sections[1]]]);
+            setArrowList((arrowList) => [...arrowList, [sections[0], sections[2], sections[3], sections[1]]]);
             columns.push(sections[0]);
             columns.push(sections[2]);
           }
@@ -181,15 +181,6 @@ export default function Editor() {
         <button onClick={() => document.getElementById('fileInput').click()}>Import Data</button>
       </div>
       <div className="full flex justify-center">
-        <span className="half flex-1">
-          <textarea
-            value={mermaidChart}
-            onChange={change}
-            onKeyDown={handleKeyDown}
-            rows={10}
-            className="w-full p-2 border border-gray-300 rounded"
-          ></textarea>
-        </span>
         <span>
           <input
             type="text"
@@ -200,12 +191,12 @@ export default function Editor() {
           <button onClick={addItem}>Add Item</button>
 
           {items.map((item, index) => (
-              <li key={index}>
+              <div key={index}>
                 {item}
                 <button onClick={() => removeItem(index)}>Remove</button>
                 <button onClick={() => setSelectedItem(item)}>Select</button>
                 <button onClick={() => setToItem(item)}>Select</button>
-              </li>
+              </div>
             ))}
           <div>
               <h3>Add Text for: {selectedItem} to {toItem}</h3>
