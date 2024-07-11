@@ -119,7 +119,12 @@ export default function Editor() {
   };
   
   const handleExport = () => {
-    downloadFile('sequencediagram.txt', mermaidChart);
+    let text = ''
+    for (let arrows of arrowList) {
+      text += arrows[0] + "," + arrows[3] + "," + arrows[1] + "," + arrows[2] + `
+      `;
+    }
+    downloadFile('sequencediagram.txt', text);
   };
 
   const handleFileUpload = (event) => {
@@ -134,6 +139,7 @@ export default function Editor() {
       } catch (error) {
         console.error('Error parsing imported data:', error);
         alert('An error occurred while reading the data');
+        alert('An error occurred while reading the data:', error);
       }
     };
   
