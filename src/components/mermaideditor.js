@@ -1,6 +1,6 @@
 'use client';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const Mermaid = dynamic(() => import('@/components/mermaid'), { ssr: false });
@@ -28,6 +28,30 @@ export default function Editor() {
 
   const [arrowList, setArrowList] = useState([]);
 
+  useEffect(() => {
+    if(arrowList.length == 0){
+      //Set to default
+      setMermaidChart(`sequenceDiagram
+      Alice ->> Bob: Hello Bob, how are you?
+      Bob-->>John: How about you John?
+      Bob--x Alice: I am good thanks!
+      Bob-x John: I am good thanks!
+      Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
+
+      Bob-->Alice: Checking with John...
+      Alice->John: Yes... John, how are you?
+      `)
+      return
+    }
+    let text = `sequenceDiagram
+      `
+    for (let arrows of arrowList) {
+      text += arrows[0] + arrows[3] + arrows[1] + ":" + arrows[2] + `
+      `;
+    }
+    setMermaidChart(text)
+  }, [arrowList])
+
   const change = (e) => {
     setMermaidChart(e.target.value);
   };
@@ -44,7 +68,7 @@ export default function Editor() {
   };
 
   const removeArrowList = (index) => {
-    setArrowList(items.filter((_, i) => i !== index));
+    setArrowList(arrowList.filter((_, i) => i !== index));
   }
 
   const onDragEnd = (result) => {
