@@ -43,19 +43,23 @@ export default function Editor() {
     setItems(items.filter((_, i) => i !== index));
   };
 
+  const removeArrowList = (index) => {
+    setArrowList(items.filter((_, i) => i !== index));
+  }
+
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
     const reorderedItems = Array.from(arrowList);
     const [removed] = reorderedItems.splice(result.source.index, 1);
     reorderedItems.splice(result.destination.index, 0, removed);
+    setArrowList(reorderedItems);
 
-    setItems(reorderedItems);
   };
 
   const addArrow = () => {
     if (selectedItem && toItem && arrowText.trim()) {
-      setArrowList([...arrowList, { item: selectedItem, item2: toItem, text: arrowText.trim(), arrow: selectedArrow}]);
+      setArrowList([...arrowList, [ selectedItem, toItem, arrowText.trim(), selectedArrow]]);
       setArrowText('');
     }
   };
@@ -148,50 +152,10 @@ export default function Editor() {
               <li key={index}>
                 {item}
                 <button onClick={() => removeItem(index)}>Remove</button>
+                <button onClick={() => setSelectedItem(item)}>Select</button>
+                <button onClick={() => setToItem(item)}>Select</button>
               </li>
             ))}
-
-
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId={items.map((item, index) => item + index)}>
-              {(provided) => (
-                <ul
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  style={{ listStyle: 'none', padding: 0 }}
-                >
-                  {items.map((item, index) => (
-                    <Draggable key={item + index} draggableId={item + index} index={index}>
-                      {(provided) => (
-                        <li
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={{
-                            ...provided.draggableProps.style,
-                            padding: '8px',
-                            margin: '0 0 8px 0',
-                            backgroundColor: '#000',
-                            border: '1px solid #ddd',
-                            borderRadius: '4px',
-                          }}
-                        >
-                          {item}
-                          <button onClick={() => removeItem(index)}>Remove</button>
-                          <button onClick={() => setSelectedItem(item)}>Select</button>
-                          <button onClick={() => setToItem(item)}>Select</button>
-                        </li>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </ul>
-              )}
-            </Droppable>
-          </DragDropContext>
-
-
-
           <div>
               <h3>Add Text for: {selectedItem} to {toItem}</h3>
               <input
@@ -230,8 +194,8 @@ export default function Editor() {
                             borderRadius: '4px',
                           }}
                         >
-                          {item.item} {item.arrow} {item.item2}:{item.text}
-                          <button onClick={() => removeItem(index)}>Remove</button>
+                          {item[0]} {item[3]} {item[1]}:{item[2]}
+                          <button onClick={() => removeArrowList(index)}>Remove</button>
                         </li>
                       )}
                     </Draggable>
