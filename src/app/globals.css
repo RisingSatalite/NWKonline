@@ -55,3 +55,12 @@ button{
   color: black;
   padding: 10px;
 }
+
+select{
+  color: black;
+}
+
+.change{
+  background-color: rgb(255, 174, 0);
+  color: black;
+}

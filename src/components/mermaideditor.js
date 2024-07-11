@@ -25,7 +25,7 @@ export default function Editor() {
   const [selectedArrow, setSelectedArrow] = useState('->>');
   
   const [selectedItem, setSelectedItem] = useState(null);
-  const [toItem, setToItem] = useState(null);
+  const [toItem, setToItem] = useState([]);
   const [arrowText, setArrowText] = useState('');
 
   const [arrowList, setArrowList] = useState([]);
@@ -191,7 +191,7 @@ export default function Editor() {
           <button onClick={addItem}>Add Item</button>
 
           {items.map((item, index) => (
-              <div key={index}>
+              <div class="change" key={index}>
                 {item}
                 <button onClick={() => removeItem(index)}>Remove</button>
                 <button onClick={() => setSelectedItem(item)}>Select</button>
@@ -200,16 +200,40 @@ export default function Editor() {
             ))}
           <div>
               <h3>Add Text for: {selectedItem} to {toItem}</h3>
+              <select value={selectedItem} onChange={(e) => setSelectedItem(e.target.value)}>
+                <option value="">Add items</option>
+                {items.map((item, index) => (
+                  <option key={index} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+              <select value={selectedArrow} onChange={(e) => setSelectedArrow(e.target.value)}>
+                <option value="">Select arrow type</option>
+                {arrowTypes.map((item, index) => (
+                  <option key={index} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+              <select value={toItem} onChange={(e) => setToItem(e.target.value)}>
+                <option value="">Add items</option>
+                {items.map((item, index) => (
+                  <option key={index} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select><br/>
               <input
                 type="text"
                 value={arrowText}
                 onChange={(e) => setArrowText(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && addArrow()}
               />
-              <button onClick={addArrow}>Add Text</button>
+              <button onClick={addArrow}>Add Arrow</button>
           </div>
 
-          <h2>Second List</h2>
+          <h2>Arrows</h2>
           <ul>
 
             <DragDropContext onDragEnd={onDragEnd}>
