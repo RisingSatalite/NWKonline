@@ -2,6 +2,7 @@
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import CollapsibleSpan from './collapsiblespan';
 
 //const fs = require('fs');
 
@@ -181,6 +182,7 @@ export default function Editor() {
         <button onClick={() => document.getElementById('fileInput').click()}>Import Data</button>
       </div>
       <div className="full flex justify-center">
+        <CollapsibleSpan>
         <span>
           <input
             type="text"
@@ -193,9 +195,9 @@ export default function Editor() {
           {items.map((item, index) => (
               <div class="change" key={index}>
                 {item}
-                <button onClick={() => removeItem(index)}>Remove</button>
-                <button onClick={() => setSelectedItem(item)}>Select</button>
-                <button onClick={() => setToItem(item)}>Select</button>
+                <button class="right" onClick={() => removeItem(index)}>Remove</button>
+                <button class="right" onClick={() => setSelectedItem(item)}>Select</button>
+                <button class="right" onClick={() => setToItem(item)}>Select</button>
               </div>
             ))}
           <div>
@@ -273,9 +275,11 @@ export default function Editor() {
           </DragDropContext>
           </ul>
         </span>
+        </CollapsibleSpan>
         <span className="half flex-1">
           <Mermaid chart={mermaidChart} key={mermaidChart} />
         </span>
+        
       </div>
     </main>
   );
