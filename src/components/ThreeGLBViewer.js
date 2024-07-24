@@ -24,15 +24,17 @@ const ThreeGLBViewer = () => {
     camera.position.z = 5;
 
     // Create a renderer
-    const renderer = new THREE.WebGLRenderer();
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     currentMount.appendChild(renderer.domElement);
+
+    // Add lighting
+    const light = new THREE.AmbientLight(0xffffff); // Soft white light
+    scene.add(light);
 
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
-
-      // Render the scene
       renderer.render(scene, camera);
     };
 
@@ -40,6 +42,7 @@ const ThreeGLBViewer = () => {
 
     // Cleanup function
     return () => {
+      renderer.dispose();
       currentMount.removeChild(renderer.domElement);
     };
   }, []);
@@ -49,10 +52,8 @@ const ThreeGLBViewer = () => {
     if (file) {
       const url = URL.createObjectURL(file);
 
-      // Create a scene
       const scene = new THREE.Scene();
 
-      // Create a camera
       const camera = new THREE.PerspectiveCamera(
         75,
         mountRef.current.clientWidth / mountRef.current.clientHeight,
@@ -61,38 +62,37 @@ const ThreeGLBViewer = () => {
       );
       camera.position.z = 5;
 
-      // Create a renderer
-      const renderer = new THREE.WebGLRenderer();
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+      mountRef.current.innerHTML = ''; // Clear previous renderer content
       mountRef.current.appendChild(renderer.domElement);
 
-      // Load the GLB file
+      const light = new THREE.AmbientLight(0xffffff);
+      scene.add(light);
+
       const loader = new GLTFLoader();
       loader.load(url, (gltf) => {
         scene.add(gltf.scene);
+        animate(); // Start the animation loop after the model is loaded
       });
 
-      // Animation loop
       const animate = () => {
         requestAnimationFrame(animate);
-
-        // Render the scene
         renderer.render(scene, camera);
       };
-
-      animate();
     }
   };
 
   return (
-    <div>
+    <div className="bg-slate-500" style={{ height: '100vh', overflow: 'hidden' }}>
       <input
         type="file"
         accept=".glb"
         ref={fileInputRef}
         onChange={handleFileChange}
+        style={{ position: 'absolute', zIndex: 1 }}
       />
-      <div ref={mountRef} style={{ width: '100%', height: '100vh' }} />
+      <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 };
