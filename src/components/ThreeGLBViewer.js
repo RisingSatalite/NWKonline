@@ -1,18 +1,26 @@
 // components/ThreeGLBViewer.js
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const ThreeGLBViewer = () => {
   const mountRef = useRef(null);
   const fileInputRef = useRef(null);
+  const [scene, setScene] = useState(null);
+  const [camera, setCamera] = useState(null);
+  const [renderer, setRenderer] = useState(null);
+  const [controls, setControls] = useState(null);
+  const [model, setModel] = useState(null);
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const currentMount = mountRef.current;
 
     // Create a scene
     const scene = new THREE.Scene();
+    setScene(scene);
 
     // Create a camera
     const camera = new THREE.PerspectiveCamera(
@@ -22,19 +30,26 @@ const ThreeGLBViewer = () => {
       1000
     );
     camera.position.z = 5;
+    setCamera(camera);
 
     // Create a renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     currentMount.appendChild(renderer.domElement);
+    setRenderer(renderer);
 
     // Add lighting
     const light = new THREE.AmbientLight(0xffffff); // Soft white light
     scene.add(light);
 
+    // Add OrbitControls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    setControls(controls);
+
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
+      controls.update();
       renderer.render(scene, camera);
     };
 
@@ -52,34 +67,24 @@ const ThreeGLBViewer = () => {
     if (file) {
       const url = URL.createObjectURL(file);
 
-      const scene = new THREE.Scene();
-
-      const camera = new THREE.PerspectiveCamera(
-        75,
-        mountRef.current.clientWidth / mountRef.current.clientHeight,
-        0.1,
-        1000
-      );
-      camera.position.z = 5;
-
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
-      mountRef.current.innerHTML = ''; // Clear previous renderer content
-      mountRef.current.appendChild(renderer.domElement);
-
-      const light = new THREE.AmbientLight(0xffffff);
-      scene.add(light);
-
+      // Load the GLB file
       const loader = new GLTFLoader();
       loader.load(url, (gltf) => {
-        scene.add(gltf.scene);
-        animate(); // Start the animation loop after the model is loaded
+        if (model) {
+          scene.remove(model); // Remove the previous model
+        }
+        const loadedModel = gltf.scene;
+        setModel(loadedModel);
+        scene.add(loadedModel);
       });
+    }
+  };
 
-      const animate = () => {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-      };
+  const handleScaleChange = (event) => {
+    const newScale = event.target.value;
+    setScale(newScale);
+    if (model) {
+      model.scale.set(newScale, newScale, newScale);
     }
   };
 
@@ -92,7 +97,21 @@ const ThreeGLBViewer = () => {
         onChange={handleFileChange}
         style={{ position: 'absolute', zIndex: 1 }}
       />
-      <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
+      <div ref={mountRef} style={{ width: '100%', height: '90%' }} />
+      {model && (
+        <div style={{ position: 'absolute', bottom: '10px', width: '100%', textAlign: 'center', zIndex: 1 }}>
+          <label htmlFor="scale">Scale: </label>
+          <input
+            id="scale"
+            type="range"
+            min="0.1"
+            max="10"
+            step="0.1"
+            value={scale}
+            onChange={handleScaleChange}
+          />
+        </div>
+      )}
     </div>
   );
 };
