@@ -8,7 +8,8 @@ export default function Home() {
   
   return (
     <main className=" items-center p-24">
-      <div>Sequence Diagram Maker</div>
+      <div>GLB file viewer</div>
+      <p>Use 2 finger to zoom, and click and drag to view the model from different directions.</p>
       <ThreeGLBViewer/>
     </main>
   );
